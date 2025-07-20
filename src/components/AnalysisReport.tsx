@@ -32,12 +32,12 @@ const AnalysisReport: React.FC = () => {
   ];
 
   useEffect(() => {
-    // Get report data from location state or localStorage
+    
     const data = location.state?.reportData || JSON.parse(localStorage.getItem('paninsight-report') || 'null');
     if (data) {
       setReportData(data);
     } else {
-      // Redirect to upload if no report data
+      
       navigate('/upload');
     }
   }, [location.state, navigate]);
@@ -69,7 +69,7 @@ const AnalysisReport: React.FC = () => {
     return 'text-red-600 dark:text-red-400';
   };
 
-  // Helper to convert image to base64 (for logo)
+  
   const getBase64Image = (imgUrl: string): Promise<string> => {
     return new Promise((resolve, reject) => {
       const img = new window.Image();
@@ -91,12 +91,12 @@ const AnalysisReport: React.FC = () => {
   const handleDownloadPDF = async () => {
     if (!reportData) return;
     const doc = new jsPDF();
-    // Add PanInsight logo
+    
     try {
       const logoBase64 = await getBase64Image(PancreasIcon);
       doc.addImage(logoBase64, 'PNG', 10, 10, 20, 20);
     } catch (e) {
-      // Logo failed to load, skip
+      
     }
     doc.setFontSize(18);
     doc.text('PanInsight AI Analysis Report', 35, 20);
@@ -106,7 +106,7 @@ const AnalysisReport: React.FC = () => {
     doc.text('AI Model Creator: Debesh Jha', 10, 47);
     doc.setLineWidth(0.5);
     doc.line(10, 50, 200, 50);
-    // Overview
+    
     doc.setFontSize(13);
     doc.text('Overview', 10, 58);
     doc.setFontSize(10);
@@ -114,7 +114,7 @@ const AnalysisReport: React.FC = () => {
     doc.text(`Analysis Date: ${reportData.analysisDate}`, 10, 71);
     doc.text(`Confidence: ${reportData.confidence}%`, 10, 77);
     doc.text(`Risk Level: ${reportData.riskLevel}`, 10, 83);
-    // Findings
+    
     doc.setFontSize(13);
     doc.text('Findings', 10, 93);
     autoTable(doc, {
@@ -126,7 +126,7 @@ const AnalysisReport: React.FC = () => {
       styles: { fontSize: 10 },
     });
     let nextY = (doc as any).lastAutoTable.finalY + 6;
-    // Recommendations
+    
     doc.setFontSize(13);
     doc.text('Recommendations', 10, nextY);
     nextY += 3;
@@ -139,7 +139,7 @@ const AnalysisReport: React.FC = () => {
       styles: { fontSize: 10 },
     });
     nextY = (doc as any).lastAutoTable.finalY + 6;
-    // Next Steps
+    
     doc.setFontSize(13);
     doc.text('Next Steps', 10, nextY);
     nextY += 3;
@@ -152,7 +152,7 @@ const AnalysisReport: React.FC = () => {
       styles: { fontSize: 10 },
     });
     nextY = (doc as any).lastAutoTable.finalY + 6;
-    // Follow-up Timeline
+  
     doc.setFontSize(13);
     doc.text('Follow-up Timeline', 10, nextY);
     doc.setFontSize(10);
@@ -214,7 +214,6 @@ const AnalysisReport: React.FC = () => {
           </p>
         </div>
 
-        {/* Tab Navigation */}
         <div className="flex flex-wrap justify-center gap-2 mb-8">
           {tabs.map((tab) => (
             <button
@@ -232,7 +231,6 @@ const AnalysisReport: React.FC = () => {
           ))}
         </div>
 
-        {/* Report Content */}
         <div className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm rounded-2xl shadow-xl border border-slate-200/50 dark:border-slate-600/50 p-8">
           {activeTab === 'overview' && (
             <div className="space-y-6">
@@ -390,12 +388,10 @@ const AnalysisReport: React.FC = () => {
           )}
         </div>
 
-        {/* Action Buttons */}
         <div className="flex flex-col sm:flex-row gap-4 mt-8 justify-center">
           <button
             onClick={() => {
               if (!reportData) return;
-              // Create a print window with the same content as the PDF
               const printWindow = window.open('', '_blank');
               if (!printWindow) return;
               printWindow.document.write(`

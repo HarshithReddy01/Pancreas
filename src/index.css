@@ -85,7 +85,6 @@
     background: #3b82f6;
   }
 
-  /* Custom animations for blob effects */
   @keyframes blob {
     0% {
       transform: translate(0px, 0px) scale(1);
@@ -112,8 +111,7 @@
   .animation-delay-4000 {
     animation-delay: 4s;
   }
-
-  /* Print styles for reports */
+  
   @media print {
     .no-print {
       display: none !important;

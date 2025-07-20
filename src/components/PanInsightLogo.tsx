@@ -12,7 +12,7 @@ const PanInsightLogo: React.FC<PanInsightLogoProps> = ({
 }) => {
   return (
     <div className={`flex items-center justify-center ${className}`}>
-      {}
+      
       <img
         src={pancreasIcon}
         alt="PanInsight - AI-Powered Pancreatic Cancer Detection"
@@ -25,7 +25,7 @@ const PanInsightLogo: React.FC<PanInsightLogoProps> = ({
         }}
       />
       
-      {}
+      
     </div>
   );
 };

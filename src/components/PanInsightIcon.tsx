@@ -18,7 +18,7 @@ const PanInsightIcon: React.FC<PanInsightIconProps> = ({
       xmlns="http://www.w3.org/2000/svg"
       className={className}
     >
-      {}
+      
       <path
         d="M12 40C12 32 18 28 24 28C30 28 36 32 36 40C36 48 30 52 24 52C18 52 12 48 12 40Z"
         fill="black"
@@ -28,13 +28,13 @@ const PanInsightIcon: React.FC<PanInsightIconProps> = ({
         fill="black"
       />
       
-      {}
+      
       <path
         d="M28 16C28 12 32 8 36 8C40 8 44 12 44 16C44 20 40 24 36 24C32 24 28 20 28 16Z"
         fill="#20B2AA"
       />
       
-      {}
+      
       <path
         d="M32 12L34 16M36 10L38 14"
         stroke="white"
@@ -42,7 +42,7 @@ const PanInsightIcon: React.FC<PanInsightIconProps> = ({
         strokeLinecap="round"
       />
       
-      {}
+      
       <circle cx="34" cy="18" r="1" fill="white" />
       <circle cx="32" cy="20" r="1" fill="white" />
       <circle cx="36" cy="20" r="1" fill="white" />
