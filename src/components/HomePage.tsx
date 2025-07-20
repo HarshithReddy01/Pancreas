@@ -29,7 +29,7 @@ const HomePage: React.FC = () => {
     <div className="min-h-screen bg-white dark:bg-slate-900 transition-colors duration-300">
       <ThemeToggle isDark={isDark} onToggle={toggleTheme} />
       
-      {/* Hero Section */}
+      {}
       <section className="relative px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
         <div className="mx-auto max-w-4xl text-center">
           <div className="flex justify-center mb-8">
@@ -55,7 +55,7 @@ const HomePage: React.FC = () => {
         </div>
       </section>
 
-      {/* How It Works Section */}
+      {}
       <section className="bg-slate-50 dark:bg-slate-800 px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
         <div className="mx-auto max-w-6xl">
           <div className="text-center mb-16">
@@ -68,7 +68,7 @@ const HomePage: React.FC = () => {
           </div>
           
           <div className="grid gap-8 md:grid-cols-3">
-            {/* Step 1: Upload Scan */}
+            {}
             <div className="relative">
               <div className="flex flex-col items-center text-center">
                 <div className="flex h-16 w-16 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-900/30 mb-6">
@@ -85,7 +85,7 @@ const HomePage: React.FC = () => {
               </div>
             </div>
 
-            {/* Step 2: AI Analysis */}
+            {}
             <div className="relative">
               <div className="flex flex-col items-center text-center">
                 <div className="flex h-16 w-16 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-900/30 mb-6">
@@ -102,7 +102,7 @@ const HomePage: React.FC = () => {
               </div>
             </div>
 
-            {/* Step 3: Report & Assist */}
+            {}
             <div className="relative">
               <div className="flex flex-col items-center text-center">
                 <div className="flex h-16 w-16 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-900/30 mb-6">

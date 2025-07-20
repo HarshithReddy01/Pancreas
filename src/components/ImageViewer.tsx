@@ -31,7 +31,7 @@ const ImageViewer: React.FC<ImageViewerProps> = ({ imageSrc, fileName, onClose, 
   const imageRef = useRef<HTMLImageElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // edit the picture of CT scan
+  
   const handleZoom = useCallback((direction: 'in' | 'out') => {
     setViewerState(prev => ({
       ...prev,
@@ -41,7 +41,6 @@ const ImageViewer: React.FC<ImageViewerProps> = ({ imageSrc, fileName, onClose, 
     }));
   }, []);
 
-  // 360 degree rotation
   const handleRotate = useCallback(() => {
     setViewerState(prev => ({
       ...prev,
@@ -171,10 +170,8 @@ const ImageViewer: React.FC<ImageViewerProps> = ({ imageSrc, fileName, onClose, 
     canvas.width = scaledWidth;
     canvas.height = scaledHeight;
 
-    // Apply filters to canvas
     ctx.filter = `contrast(${viewerState.contrast}%) brightness(${viewerState.brightness}%)`;
     
-    // Apply rotation and zoom
     if (viewerState.rotation !== 0) {
       ctx.save();
       ctx.translate(canvas.width / 2, canvas.height / 2);
@@ -182,7 +179,7 @@ const ImageViewer: React.FC<ImageViewerProps> = ({ imageSrc, fileName, onClose, 
       ctx.drawImage(img, -scaledWidth / 2, -scaledHeight / 2, scaledWidth, scaledHeight);
       ctx.restore();
     } else {
-      // Apply zoom by drawing the image at the scaled size
+
       ctx.drawImage(img, 0, 0, scaledWidth, scaledHeight);
     }
     const editedImageData = canvas.toDataURL('image/png');
@@ -196,7 +193,7 @@ const ImageViewer: React.FC<ImageViewerProps> = ({ imageSrc, fileName, onClose, 
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
       <div className="relative w-full max-w-7xl h-full max-h-[90vh] bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-700 overflow-hidden">
         
-        {/* Header */}
+        {}
         <div className="flex items-center justify-between p-4 border-b border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800">
           <div className="flex items-center space-x-3">
             <div className="w-10 h-10 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center">
@@ -278,7 +275,7 @@ const ImageViewer: React.FC<ImageViewerProps> = ({ imageSrc, fileName, onClose, 
 
               {}
               <div className="absolute inset-0 pointer-events-none z-10">
-                {/* AI overlays will be added here in Step 4 */}
+                {}
               </div>
 
               {}
@@ -313,7 +310,7 @@ const ImageViewer: React.FC<ImageViewerProps> = ({ imageSrc, fileName, onClose, 
           {}
           <div className="lg:w-80 bg-slate-50 dark:bg-slate-800 border-l border-slate-200 dark:border-slate-700 p-6 overflow-y-auto max-h-full">
             
-            {/* Zoom Controls */}
+            {}
             <div className="mb-8">
               <h3 className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-4 flex items-center">
                 <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
