@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import ThemeToggle from './ThemeToggle';
+import { ThemeContext } from '../theme/ThemeContext';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import PancreasIcon from '../assets/pancreas-icon.png';
+import ThemeToggle from './ThemeToggle';
 
 interface ReportData {
   scanType: string;
@@ -17,9 +18,9 @@ interface ReportData {
 }
 
 const AnalysisReport: React.FC = () => {
-  const [isDark, setIsDark] = useState(false);
-  const [activeTab, setActiveTab] = useState<'overview' | 'findings' | 'recommendations' | 'next-steps'>('overview');
-  const [reportData, setReportData] = useState<ReportData | null>(null);
+  const { isDark, toggleTheme } = useContext(ThemeContext);
+  const [activeTab, setActiveTab] = React.useState<'overview' | 'findings' | 'recommendations' | 'next-steps'>('overview');
+  const [reportData, setReportData] = React.useState<ReportData | null>(null);
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -31,9 +32,6 @@ const AnalysisReport: React.FC = () => {
   ];
 
   useEffect(() => {
-    const savedTheme = localStorage.getItem('paninsight-theme');
-    setIsDark(savedTheme === 'dark');
-
     // Get report data from location state or localStorage
     const data = location.state?.reportData || JSON.parse(localStorage.getItem('paninsight-report') || 'null');
     if (data) {
@@ -47,10 +45,8 @@ const AnalysisReport: React.FC = () => {
   useEffect(() => {
     if (isDark) {
       document.documentElement.classList.add('dark');
-      localStorage.setItem('paninsight-theme', 'dark');
     } else {
       document.documentElement.classList.remove('dark');
-      localStorage.setItem('paninsight-theme', 'light');
     }
   }, [isDark]);
 
@@ -71,10 +67,6 @@ const AnalysisReport: React.FC = () => {
     if (confidence >= 80) return 'text-green-600 dark:text-green-400';
     if (confidence >= 60) return 'text-yellow-600 dark:text-yellow-400';
     return 'text-red-600 dark:text-red-400';
-  };
-
-  const toggleTheme = () => {
-    setIsDark(!isDark);
   };
 
   // Helper to convert image to base64 (for logo)
@@ -187,7 +179,6 @@ const AnalysisReport: React.FC = () => {
         <div className="absolute top-40 left-40 w-80 h-80 bg-pink-400 dark:bg-pink-600 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-xl opacity-20 animate-blob animation-delay-4000"></div>
       </div>
 
-      <ThemeToggle isDark={isDark} onToggle={toggleTheme} />
       
       <div className="relative max-w-7xl mx-auto px-4 pt-8 sm:px-6 lg:px-8 pb-8">
         <div className="flex items-center justify-between mb-8">
@@ -241,6 +232,7 @@ const AnalysisReport: React.FC = () => {
 
         {/* Report Content */}
         <div className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm rounded-2xl shadow-xl border border-slate-200/50 dark:border-slate-600/50 p-8">
+          <ThemeToggle isDark={isDark} onToggle={toggleTheme} />
           {activeTab === 'overview' && (
             <div className="space-y-6">
               <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">

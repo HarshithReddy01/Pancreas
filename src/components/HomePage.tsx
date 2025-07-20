@@ -1,29 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import PanInsightLogo from './PanInsightLogo';
 import ThemeToggle from './ThemeToggle';
+import { ThemeContext } from '../theme/ThemeContext';
 
 const HomePage: React.FC = () => {
-  const [isDark, setIsDark] = useState(false);
-
-  useEffect(() => {
-    const savedTheme = localStorage.getItem('paninsight-theme');
-    setIsDark(savedTheme === 'dark');
-  }, []);
-
-  useEffect(() => {
-    if (isDark) {
-      document.documentElement.classList.add('dark');
-      localStorage.setItem('paninsight-theme', 'dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-      localStorage.setItem('paninsight-theme', 'light');
-    }
-  }, [isDark]);
-
-  const toggleTheme = () => {
-    setIsDark(!isDark);
-  };
+  const { isDark, toggleTheme } = useContext(ThemeContext);
 
   return (
     <div className="min-h-screen bg-white dark:bg-slate-900 transition-colors duration-300">

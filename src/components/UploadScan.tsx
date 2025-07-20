@@ -1,7 +1,8 @@
-import React, { useState, useRef, useCallback, useEffect } from 'react';
+import React, { useState, useRef, useCallback, useEffect, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import ThemeToggle from './ThemeToggle';
+import { ThemeContext } from '../theme/ThemeContext';
 import ImageViewer from './ImageViewer';
+import ThemeToggle from './ThemeToggle';
 
 interface UploadScanProps {
   onAnalyze?: (file: File) => void;
@@ -19,7 +20,6 @@ const UploadScan: React.FC<UploadScanProps> = ({ onAnalyze }) => {
   const [hasConsent, setHasConsent] = useState(false);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [dragCounter, setDragCounter] = useState(0);
-  const [isDark, setIsDark] = useState(false);
   const [isPulsing, setIsPulsing] = useState(false);
   const [showViewer, setShowViewer] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -203,10 +203,7 @@ const UploadScan: React.FC<UploadScanProps> = ({ onAnalyze }) => {
     setShowViewer(false);
   };
 
-  useEffect(() => {
-    const savedTheme = localStorage.getItem('paninsight-theme');
-    setIsDark(savedTheme === 'dark');
-  }, []);
+  const { isDark, toggleTheme } = useContext(ThemeContext);
 
   useEffect(() => {
     if (isDark) {
@@ -218,10 +215,6 @@ const UploadScan: React.FC<UploadScanProps> = ({ onAnalyze }) => {
     }
   }, [isDark]);
 
-  const toggleTheme = () => {
-    setIsDark(!isDark);
-  };
-
   const canAnalyze = fileInfo && hasConsent && !isAnalyzing;
 
   return (
@@ -232,7 +225,6 @@ const UploadScan: React.FC<UploadScanProps> = ({ onAnalyze }) => {
         <div className="absolute top-40 left-40 w-80 h-80 bg-pink-400 dark:bg-pink-600 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-xl opacity-20 animate-blob animation-delay-4000"></div>
       </div>
 
-      <ThemeToggle isDark={isDark} onToggle={toggleTheme} />
       
       <div className="relative max-w-6xl mx-auto px-4 pt-8 sm:px-6 lg:px-8">
         <Link
@@ -503,6 +495,8 @@ const UploadScan: React.FC<UploadScanProps> = ({ onAnalyze }) => {
           onSave={handleSaveImage}
         />
       )}
+
+      <ThemeToggle isDark={isDark} onToggle={toggleTheme} />
 
     </div>
   );
