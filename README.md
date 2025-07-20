@@ -31,11 +31,23 @@ This project isn’t just for doctors — anyone with a scan and the right to us
 - All controls happen on the frontend — the image file itself stays untouched.
 - Empty overlay container is ready for AI results (bounding boxes, heatmaps, etc.).
 
+### 4. **Detailed Reports with Actionable Insights**
+- Comprehensive AI analysis reports with multiple sections:
+  - **Overview**: Scan type, confidence levels, risk assessment, and analysis date
+  - **AI Findings**: Detailed analysis results from advanced algorithms
+  - **Recommendations**: Actionable medical recommendations based on findings
+  - **Next Steps**: Clear timeline and follow-up instructions
+- Interactive tabbed interface for easy navigation
+- Print and download functionality for reports
+- Professional medical-grade reporting format
+- Risk level assessment (Low/Medium/High) with color-coded indicators
+- Confidence scoring with visual indicators
+
 ---
 
 ## What Needs To Be Done
 
-### 4. **AI Integration & Backend**
+### 5. **AI Integration & Backend**
 - Connect backend to the pancreatic cancer detection model developed by Professor Debesh Jha.
 - Inputs: medical scan
 - Outputs: confidence scores, lesion coordinates, segmentation or heatmap overlays
@@ -46,17 +58,17 @@ This project isn’t just for doctors — anyone with a scan and the right to us
 - Return AI output to the frontend as JSON.
 
 
-### 5. **Display AI Results**
+### 6. **Display AI Results**
 - Overlay detection boxes on the image.
 - Show confidence levels and tumor info.
 - Add toggle for showing/hiding heatmap.
 - Provide “Confirm” or “Reject” buttons for user to validate AI suggestions.
 
-### 6. **Export / Download Report**
+### 7. **Export / Download Report**
 - Let users download a basic PDF or image-based report of the scan + AI output.
 - Include metadata like date, consent, and detection details.
 
-### 7. **Backend Setup (Technical)**
+### 8. **Backend Setup (Technical)**
 - FastAPI or Express backend (TBD)
 - Endpoint to receive and parse scan
 - Connect to AI model (PyTorch or TensorFlow)
@@ -83,9 +95,11 @@ This project isn’t just for doctors — anyone with a scan and the right to us
 
 ## In Progress
 
+- [x] Detailed report UI with actionable insights
+- [x] Print and download functionality for reports
+- [x] Interactive tabbed report interface
 - [ ] Backend file handler
 - [ ] AI model API interface
 - [ ] Overlay rendering logic
-- [ ] Downloadable report UI
 - [ ] Live demo + deployment
 
