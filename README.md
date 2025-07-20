@@ -6,7 +6,7 @@ This project isn’t just for doctors — anyone with a scan and the right to us
 
 ---
 
-## What’s Done So Far
+
 
 ### 1. **Home Page**
 - Clean landing page with a short pitch and a “Start Diagnosis” button.
