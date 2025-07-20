@@ -1,5 +1,5 @@
 import React, { useState, useRef, useCallback, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import ThemeToggle from './ThemeToggle';
 import ImageViewer from './ImageViewer';
 
@@ -23,6 +23,7 @@ const UploadScan: React.FC<UploadScanProps> = ({ onAnalyze }) => {
   const [isPulsing, setIsPulsing] = useState(false);
   const [showViewer, setShowViewer] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const navigate = useNavigate();
 
   const acceptedTypes = ['.dcm', '.jpg', '.jpeg', '.png'];
   const acceptedMimeTypes = [
@@ -128,13 +129,51 @@ const UploadScan: React.FC<UploadScanProps> = ({ onAnalyze }) => {
     setIsAnalyzing(true);
     
     try {
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      await new Promise(resolve => setTimeout(resolve, 3000));
+      
+      // Generate sample report data
+      const sampleReportData = {
+        scanType: fileInfo.file.name.toLowerCase().endsWith('.dcm') ? 'DICOM CT Scan' : 'Medical Image',
+        analysisDate: new Date().toLocaleDateString('en-US', { 
+          year: 'numeric', 
+          month: 'long', 
+          day: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit'
+        }),
+        confidence: Math.floor(Math.random() * 30) + 70, // 70-99%
+        findings: [
+          "No significant abnormalities detected in the pancreatic region",
+          "Normal pancreatic tissue density and structure observed",
+          "Vascular structures appear within normal limits",
+          "No evidence of mass lesions or calcifications",
+          "Pancreatic duct appears normal in caliber"
+        ],
+        recommendations: [
+          "Continue routine monitoring as recommended by your healthcare provider",
+          "Maintain healthy lifestyle habits including balanced diet and regular exercise",
+          "Schedule follow-up imaging in 6-12 months as per standard protocols",
+          "Consider annual screening if you have family history of pancreatic conditions",
+          "Report any new symptoms to your healthcare provider promptly"
+        ],
+        riskLevel: 'Low' as const,
+        nextSteps: [
+          "Share this report with your primary care physician",
+          "Schedule follow-up appointment within 3-6 months",
+          "Maintain regular health check-ups",
+          "Monitor for any new symptoms or changes",
+          "Consider genetic counseling if family history is present"
+        ],
+        followUpTimeline: "Recommended follow-up in 6-12 months with repeat imaging and consultation with your healthcare provider."
+      };
+      
+      // Store report data in localStorage and navigate to report page
+      localStorage.setItem('paninsight-report', JSON.stringify(sampleReportData));
+      navigate('/report', { state: { reportData: sampleReportData } });
       
       if (onAnalyze) {
         onAnalyze(fileInfo.file);
       }
-      
-      alert('Analysis completed! (Integrate Professor AI model)');
     } catch (error) {
       alert('Analysis failed. Please try again.');
     } finally {
@@ -464,6 +503,7 @@ const UploadScan: React.FC<UploadScanProps> = ({ onAnalyze }) => {
           onSave={handleSaveImage}
         />
       )}
+
     </div>
   );
 };
