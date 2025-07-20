@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import ThemeToggle from './ThemeToggle';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
+import PancreasIcon from '../assets/pancreas-icon.png';
 
 interface ReportData {
   scanType: string;
@@ -72,6 +75,97 @@ const AnalysisReport: React.FC = () => {
 
   const toggleTheme = () => {
     setIsDark(!isDark);
+  };
+
+  // Helper to convert image to base64 (for logo)
+  const getBase64Image = (imgUrl: string): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const img = new window.Image();
+      img.crossOrigin = 'Anonymous';
+      img.onload = function () {
+        const canvas = document.createElement('canvas');
+        canvas.width = img.width;
+        canvas.height = img.height;
+        const ctx = canvas.getContext('2d');
+        if (!ctx) return reject('No canvas context');
+        ctx.drawImage(img, 0, 0);
+        resolve(canvas.toDataURL('image/png'));
+      };
+      img.onerror = reject;
+      img.src = imgUrl;
+    });
+  };
+
+  const handleDownloadPDF = async () => {
+    if (!reportData) return;
+    const doc = new jsPDF();
+    // Add PanInsight logo
+    try {
+      const logoBase64 = await getBase64Image(PancreasIcon);
+      doc.addImage(logoBase64, 'PNG', 10, 10, 20, 20);
+    } catch (e) {
+      // Logo failed to load, skip
+    }
+    doc.setFontSize(18);
+    doc.text('PanInsight AI Analysis Report', 35, 20);
+    doc.setFontSize(11);
+    doc.text('PanInsight is an advanced AI-powered platform for early detection and analysis of pancreatic conditions.\nThis report provides actionable insights and recommendations based on your medical scan.', 10, 35);
+    doc.setFontSize(10);
+    doc.text('AI Model Creator: Debesh Jha', 10, 47);
+    doc.setLineWidth(0.5);
+    doc.line(10, 50, 200, 50);
+    // Overview
+    doc.setFontSize(13);
+    doc.text('Overview', 10, 58);
+    doc.setFontSize(10);
+    doc.text(`Scan Type: ${reportData.scanType}`, 10, 65);
+    doc.text(`Analysis Date: ${reportData.analysisDate}`, 10, 71);
+    doc.text(`Confidence: ${reportData.confidence}%`, 10, 77);
+    doc.text(`Risk Level: ${reportData.riskLevel}`, 10, 83);
+    // Findings
+    doc.setFontSize(13);
+    doc.text('Findings', 10, 93);
+    autoTable(doc, {
+      startY: 96,
+      head: [['#', 'Finding']],
+      body: reportData.findings.map((f, i) => [i + 1, f]),
+      theme: 'striped',
+      headStyles: { fillColor: [41, 128, 185] },
+      styles: { fontSize: 10 },
+    });
+    let nextY = (doc as any).lastAutoTable.finalY + 6;
+    // Recommendations
+    doc.setFontSize(13);
+    doc.text('Recommendations', 10, nextY);
+    nextY += 3;
+    autoTable(doc, {
+      startY: nextY,
+      head: [['#', 'Recommendation']],
+      body: reportData.recommendations.map((r, i) => [i + 1, r]),
+      theme: 'striped',
+      headStyles: { fillColor: [142, 68, 173] },
+      styles: { fontSize: 10 },
+    });
+    nextY = (doc as any).lastAutoTable.finalY + 6;
+    // Next Steps
+    doc.setFontSize(13);
+    doc.text('Next Steps', 10, nextY);
+    nextY += 3;
+    autoTable(doc, {
+      startY: nextY,
+      head: [['#', 'Next Step']],
+      body: reportData.nextSteps.map((s, i) => [i + 1, s]),
+      theme: 'striped',
+      headStyles: { fillColor: [39, 174, 96] },
+      styles: { fontSize: 10 },
+    });
+    nextY = (doc as any).lastAutoTable.finalY + 6;
+    // Follow-up Timeline
+    doc.setFontSize(13);
+    doc.text('Follow-up Timeline', 10, nextY);
+    doc.setFontSize(10);
+    doc.text(reportData.followUpTimeline, 10, nextY + 7);
+    doc.save('PanInsight-Report.pdf');
   };
 
   if (!reportData) {
@@ -306,7 +400,76 @@ const AnalysisReport: React.FC = () => {
         {/* Action Buttons */}
         <div className="flex flex-col sm:flex-row gap-4 mt-8 justify-center">
           <button
-            onClick={() => window.print()}
+            onClick={() => {
+              if (!reportData) return;
+              // Create a print window with the same content as the PDF
+              const printWindow = window.open('', '_blank');
+              if (!printWindow) return;
+              printWindow.document.write(`
+                <html>
+                  <head>
+                    <title>PanInsight AI Analysis Report</title>
+                    <style>
+                      body { font-family: Arial, sans-serif; margin: 40px; color: #222; }
+                      .logo { width: 60px; height: 60px; margin-bottom: 10px; }
+                      .header { display: flex; align-items: center; gap: 16px; }
+                      .title { font-size: 2rem; font-weight: bold; margin-bottom: 0; }
+                      .intro { font-size: 1rem; margin-bottom: 10px; }
+                      .section { margin-top: 24px; }
+                      .section-title { font-size: 1.2rem; font-weight: bold; margin-bottom: 8px; }
+                      table { border-collapse: collapse; width: 100%; margin-bottom: 16px; }
+                      th, td { border: 1px solid #bbb; padding: 8px; text-align: left; }
+                      th { background: #e3e8f0; }
+                      .footer { margin-top: 32px; font-size: 0.95rem; color: #555; }
+                    </style>
+                  </head>
+                  <body>
+                    <div class="header">
+                      <img src="${PancreasIcon}" class="logo" alt="PanInsight Logo" />
+                      <div>
+                        <div class="title">PanInsight AI Analysis Report</div>
+                        <div class="intro">PanInsight is an advanced AI-powered platform for early detection and analysis of pancreatic conditions.<br/>This report provides actionable insights and recommendations based on your medical scan.</div>
+                        <div style="font-size:0.95rem; color:#666;">AI Model Creator: Debesh Jha</div>
+                      </div>
+                    </div>
+                    <hr/>
+                    <div class="section">
+                      <div class="section-title">Overview</div>
+                      <div>Scan Type: <b>${reportData.scanType}</b></div>
+                      <div>Analysis Date: <b>${reportData.analysisDate}</b></div>
+                      <div>Confidence: <b>${reportData.confidence}%</b></div>
+                      <div>Risk Level: <b>${reportData.riskLevel}</b></div>
+                    </div>
+                    <div class="section">
+                      <div class="section-title">Findings</div>
+                      <table><thead><tr><th>#</th><th>Finding</th></tr></thead><tbody>
+                        ${reportData.findings.map((f, i) => `<tr><td>${i + 1}</td><td>${f}</td></tr>`).join('')}
+                      </tbody></table>
+                    </div>
+                    <div class="section">
+                      <div class="section-title">Recommendations</div>
+                      <table><thead><tr><th>#</th><th>Recommendation</th></tr></thead><tbody>
+                        ${reportData.recommendations.map((r, i) => `<tr><td>${i + 1}</td><td>${r}</td></tr>`).join('')}
+                      </tbody></table>
+                    </div>
+                    <div class="section">
+                      <div class="section-title">Next Steps</div>
+                      <table><thead><tr><th>#</th><th>Next Step</th></tr></thead><tbody>
+                        ${reportData.nextSteps.map((s, i) => `<tr><td>${i + 1}</td><td>${s}</td></tr>`).join('')}
+                      </tbody></table>
+                    </div>
+                    <div class="section">
+                      <div class="section-title">Follow-up Timeline</div>
+                      <div>${reportData.followUpTimeline}</div>
+                    </div>
+                    <div class="footer">Generated by PanInsight | AI Model Creator: Debesh Jha</div>
+                  </body>
+                </html>
+              `);
+              printWindow.document.close();
+              printWindow.focus();
+              setTimeout(() => printWindow.print(), 500);
+            }}
             className="flex items-center justify-center px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
           >
             <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -314,23 +477,14 @@ const AnalysisReport: React.FC = () => {
             </svg>
             Print Report
           </button>
-          
           <button
-            onClick={() => {
-              const element = document.createElement('a');
-              const file = new Blob([JSON.stringify(reportData, null, 2)], {type: 'application/json'});
-              element.href = URL.createObjectURL(file);
-              element.download = 'paninsight-report.json';
-              document.body.appendChild(element);
-              element.click();
-              document.body.removeChild(element);
-            }}
-            className="flex items-center justify-center px-6 py-3 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
+            onClick={handleDownloadPDF}
+            className="flex items-center justify-center px-6 py-3 bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-700 hover:to-purple-700 text-white rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
           >
             <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
             </svg>
-            Download Report
+            Download as PDF
           </button>
         </div>
       </div>
