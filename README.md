@@ -1,4 +1,4 @@
-# PanInsight – AI-Powered Pancreatic Cancer Detection
+# PanInsight - AI-Powered Pancreatic Cancer Detection
 
 PanInsight is a medical web application that helps users analyze CT and MRI scans for early signs of pancreatic cancer using AI. It's designed to be clean, secure, and accessible on both mobile and desktop.
 
@@ -51,7 +51,7 @@ This project isn’t just for doctors — anyone with a scan and the right to us
 - Connect backend to the pancreatic cancer detection model developed by Professor Debesh Jha.
 - Inputs: medical scan
 - Outputs: confidence scores, lesion coordinates, segmentation or heatmap overlays
-- Build a secure backend using Java (Spring Boot or similar).
+- Build a secure backend
 - Accept uploaded scan files.
 - Forward to the AI analysis service.
 - Handle response, errors, and logging.
@@ -68,26 +68,20 @@ This project isn’t just for doctors — anyone with a scan and the right to us
 - Let users download a basic PDF or image-based report of the scan + AI output.
 - Include metadata like date, consent, and detection details.
 
-### 8. **Backend Setup (Technical)**
-- FastAPI or Express backend (TBD)
-- Endpoint to receive and parse scan
-- Connect to AI model (PyTorch or TensorFlow)
-- Handle errors, timeouts, and failed predictions gracefully
-
 ---
 
 ## Tech Stack
 
 - **Frontend**: React + TypeScript + Tailwind CSS
 - **AI Service**: Python (to be integrated) - Professor Debesh Jha
-- **Backend**: Java Spring Boot
-- **Hosting Plan**: Likely Vercel (frontend) + Render or EC2 (backend)
+- **Backend**: AI model
+- **Hosting Plan**: Docker, AWS
 
 ---
 
 ## Notes
 
-- No tracking, no 3rd-party analytics — this app respects data boundaries.
+- No tracking, no 3rd-party analytics — this web respects data boundaries.
 - Every step is intentional: users stay in control the entire time.
 - Designed to look great on mobile, not just desktop.
 
